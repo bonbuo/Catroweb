@@ -1,0 +1,41 @@
+{% extends 'Default/base.html.twig' %}
+{% block page_title %}Catrochat{% endblock %}
+
+{% block head %}
+    {{ encore_entry_link_tags('catrochat') }}
+{% endblock %}
+
+{% block body %}
+    <h1>Catrochat</h1>
+    <form id="queryForm">
+        <textarea name="user_query" id="userQuery" rows="4" cols="50"></textarea><br>
+        <button type="submit">Ask</button>
+    </form>
+    <div id="chatWindow"></div>
+
+    <script>
+      document.getElementById('userQuery').value = "Welcome to catrochat! The catrobat wiki documentation chatbot!\r\n You: ";
+      document.getElementById('queryForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        let userQuery = document.getElementById('userQuery').value;
+        document.getElementById('userQuery').value = "You: ";
+        const formData = new FormData()
+        userQuery = userQuery.replace('Welcome to catrochat! The catrobat wiki documentation chatbot!','');
+        userQuery = userQuery.replace('You: ','');
+        userQuery = userQuery.replace(/(?:\r\n|\r|\n)/g,'');
+        formData.append('user_query', userQuery)
+        fetch('{{ path('catrochat') }}', {
+          method: 'POST',
+          body: formData,
+        })
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('chatWindow').innerHTML += 'You: ' + userQuery + '<br>';
+            document.getElementById('chatWindow').innerHTML += 'Catrochat: ' + data.response + '<br>';
+          });
+      });
+    </script>
+
+
+
+{% endblock %}

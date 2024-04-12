@@ -101,4 +101,21 @@ class IndexController extends AbstractController
       return new JsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
     }
   }
+
+    #[Route(path: '/catrochat/', name: 'catrochat', methods: ['GET', 'POST'])]
+    public function catrochatView(Request $request): Response
+    {
+        if ($request->isMethod('POST')) {
+            $userQuery = $request->request->get('user_query');
+            $userQueryArg = escapeshellarg($userQuery);
+            $command = "python3 ../src/Catrochat/test.py " . $userQueryArg;
+            //$command = "python3 ../src/Catrochat/catrochat.py " . $userQueryArg;
+            $response = escapeshellcmd($command);
+            $response = shell_exec($response);
+
+            return $this->json(['response' => $response, 'a' => $userQuery]);
+        }
+
+        return $this->render('Catrochat/catrochat.html.twig');
+    }
 }

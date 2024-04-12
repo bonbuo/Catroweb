@@ -151,6 +151,7 @@ Encore
   .addEntry('search_old', './assets/js/search_old.js')
   .addEntry('search', './assets/js/search.js')
   .addEntry('media_library', './assets/js/media_library.js')
+  .addEntry('catrochat', './assets/js/catrochat.js')
   .addEntry('login', './assets/js/login.js')
   .addEntry('register', './assets/js/register.js')
   .addEntry('request', './assets/js/request.js')
