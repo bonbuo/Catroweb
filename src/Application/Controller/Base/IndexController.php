@@ -108,8 +108,8 @@ class IndexController extends AbstractController
         if ($request->isMethod('POST')) {
             $userQuery = $request->request->get('user_query');
             $userQueryArg = escapeshellarg($userQuery);
-            $command = "python3 ../src/Catrochat/test.py " . $userQueryArg;
-            //$command = "python3 ../src/Catrochat/catrochat.py " . $userQueryArg;
+            //$command = "python3 ../src/Catrochat/test.py " . $userQueryArg;
+            $command = "python3 ../src/Catrochat/catrochat.py " . $userQueryArg;
             $response = escapeshellcmd($command);
             $response = shell_exec($response);
 

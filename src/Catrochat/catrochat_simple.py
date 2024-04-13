@@ -81,23 +81,32 @@ class CatrochatSimple:
 
     def answer_user(self, user_query):
         most_similar_entries = []
-
-        if user_query.lower() == 'exit':
-            return "Goodbye!", most_similar_entries, -1
-
         intent_response = self.recognize_intent(user_query)
         if intent_response:
-            return intent_response, most_similar_entries, 0
+            return intent_response
         else:
             most_similar_entry, found = self.find_most_similar_entry(user_query)
             if not found:
-                return str(most_similar_entry) + "\n\n", [], 0
+                return str(most_similar_entry) + "<br>"
 
-            response = str(most_similar_entry[1]) + "\n\n"
-            response = response + "You can find additional info here: " + str(most_similar_entry[0]) + "\n\n"
+            response = str(most_similar_entry[1]) + "<br>"
+            response = response + "You can find additional info <a href = ' + str(most_similar_entry[0]) + '> here </a> <br>"
 
             most_similar_entries = self.find_multiple_similar_entries(user_query)
-            print(response)
-            print(most_similar_entries)
-            print(0)
-            #return response, most_similar_entries, 0
+            if most_similar_entries:
+                response = response + "__________________________________________________________________________________________________<br>"
+                response = response + "Here are additional relevant search results for your question:<br>"
+                counter = 0
+                response = response + "<ul>"
+                for similar_entry in most_similar_entries:
+                    if counter > 0:
+                        response = response + "<li>"
+                        response = response + str(similar_entry[1]) + "<br>"
+                        response = response + "<a href= ' + str(similar_entry[0]) + '> Details </a>"
+                        response = response + "</li>"
+                    counter = counter + 1
+                    response = response + "</ul>"
+                response = response + "__________________________________________________________________________________________________<br>"
+
+
+            return response
