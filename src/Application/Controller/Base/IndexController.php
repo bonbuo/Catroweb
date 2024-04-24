@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception;
 
 class IndexController extends AbstractController
 {
@@ -105,17 +107,28 @@ class IndexController extends AbstractController
     #[Route(path: '/catrochat/', name: 'catrochat', methods: ['GET', 'POST'])]
     public function catrochatView(Request $request): Response
     {
+        $client = new Client(['base_uri' => '172.17.0.1:8000']);
+
         if ($request->isMethod('POST')) {
             $userQuery = $request->request->get('user_query');
-            $userQueryArg = escapeshellarg($userQuery);
-            //$command = "python3 ../src/Catrochat/test.py " . $userQueryArg;
-            $command = "python3 ../src/Catrochat/catrochat.py " . $userQueryArg;
-            $response = escapeshellcmd($command);
-            $response = shell_exec($response);
+            try {
+                $response = $client->post('/answer_user', [
+                    'form_params' => [
+                        'user_query' => $userQuery
+                    ],
+                ]);
 
-            return $this->json(['response' => $response, 'a' => $userQuery]);
+                if ($response->getStatusCode() === 200) {
+                    return $this->json(['response' => $response->getBody()->getContents(), 'a' => $userQuery]);
+                } else {
+                    echo 'Error: Unexpected status code ' . $response->getStatusCode();
+                    return $this->json(['response' => $response->getStatusCode(), 'a' => $userQuery]);
+                }
+            } catch (Exception\RequestException $e) {
+                echo 'Error: ' . $e->getMessage();
+                return $this->json(['response' => $e->getMessage(), 'a' => $userQuery]);
+            }
         }
-
         return $this->render('Catrochat/catrochat.html.twig');
     }
 }

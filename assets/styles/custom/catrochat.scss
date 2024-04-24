@@ -22,7 +22,7 @@ button {
 
 #chatWindow {
   width: calc(100% - #{$spacing * 2});
-  height: 300px;
+  height: 100%;
   margin: $spacing;
   overflow-y: auto;
 }
