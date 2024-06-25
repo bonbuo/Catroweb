@@ -119,14 +119,14 @@ class IndexController extends AbstractController
                 ]);
 
                 if ($response->getStatusCode() === 200) {
-                    return $this->json(['response' => $response->getBody()->getContents(), 'a' => $userQuery]);
+                    return $this->json(['response' => $response->getBody()->getContents(), 'userQuery' => $userQuery]);
                 } else {
                     echo 'Error: Unexpected status code ' . $response->getStatusCode();
-                    return $this->json(['response' => $response->getStatusCode(), 'a' => $userQuery]);
+                    return $this->json(['response' => $response->getStatusCode(), 'userQuery' => $userQuery]);
                 }
             } catch (Exception\RequestException $e) {
                 echo 'Error: ' . $e->getMessage();
-                return $this->json(['response' => $e->getMessage(), 'a' => $userQuery]);
+                return $this->json(['response' => $e->getMessage(), 'userQuery' => $userQuery]);
             }
         }
         return $this->render('Catrochat/catrochat.html.twig');

@@ -32,6 +32,7 @@
           .then(data => {
             document.getElementById('chatWindow').innerHTML += 'You: ' + userQuery + '<br>';
             document.getElementById('chatWindow').innerHTML += 'Catrochat: ' + data.response + '<br>';
+            document.getElementById('chatWindow').innerHTML += '<br>';
             document.getElementById('chatWindow').scrollTop = document.getElementById('chatWindow').scrollHeight;
           });
       });
